@@ -8,7 +8,7 @@
  * License: GNU/GPLv2
  * @see LICENSE.txt
  *
- * This file: Referrer spam module (last modified: 2026.03.18).
+ * This file: Referrer spam module (last modified: 2026.08.16).
  *
  * False positive risk (an approximate, rough estimate only): « [ ]Low [x]Medium [ ]High »
  */
@@ -202,9 +202,16 @@ $this->CIDRAM['ModuleResCache'][$Module] = function () {
         ], $this->BlockInfo['IPAddr']);
     } // 2023.06.16
 
-    if ($this->trigger(\preg_match('~//blog//wp-login\.php$~i', $this->BlockInfo['Referrer']), 'Hack attempt via referrer header injection detected')) {
-        $this->Reporter->report([10, 15, 21], ['Hack attempt via referrer header injection detected.'], $this->BlockInfo['IPAddr']);
-    } // 2025.07.24
+    if ($this->BlockInfo['rURI'] !== '' && ($PDPos = \strpos($this->BlockInfo['rURI'], '://')) !== false) {
+        $SPos = \strpos(\substr($this->BlockInfo['rURI'], $PDPos + 3), '/');
+        $Auth = $SPos === false ? $this->BlockInfo['rURI'] : \substr($this->BlockInfo['rURI'], 0, $SPos + $PDPos + 3);
+        $AuthLen = \strlen($Auth);
+        if ($Auth !== \substr($this->BlockInfo['Referrer'], 0, $AuthLen)) {
+            if ($this->trigger(\preg_match('~//wp-login\.php$~i', $this->BlockInfo['Referrer']), 'Hack attempt via referrer header injection detected')) {
+                $this->Reporter->report([10, 15, 21], ['Hack attempt via referrer header injection detected.'], $this->BlockInfo['IPAddr']);
+            } // 2025.07.24 mod 2026.08.16
+        }
+    }
 
     $this->trigger($RefLC === '(null)', 'Illegal referrer'); // 2018.03.13
 };

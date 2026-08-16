@@ -42,11 +42,11 @@ PHPMailer:
 Referrer spam module:
  Name: "Referrer spam module"
  False Positive Risk: "Medium"
- Version: "2026.76.0"
+ Version: "2026.227.0"
  Dependencies:
   intl: "*"
  Files:
   modules/refspam.php:
    From: "https://raw.githubusercontent.com/CIDRAM/CIDRAM-Extras/master/modules/refspam.php"
-   Checksum: "fcd2a6afffa780194f8f02326be936f165aa7287cca0b26c92ea5cbdf6df7ace:12499"
+   Checksum: "faed9eb5b86fcdd9dd64471b9484efeefdefbcfae0ceb3b80a7621f456bfec90:12963"
    Used with: "modules"
